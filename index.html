@@ -42,10 +42,10 @@
         <input type="text" id="smiles" name="smiles">
         
         <label for="mz">m/z:</label>
-        <input type="number" id="mz" name="mz" step="0.0001">
+        <input type="number" id="mz" name="mz" step="0.0000001">
         
         <label for="retention_time">Temps de rétention:</label>
-        <input type="number" id="retention_time" name="retention_time" step="0.01">
+        <input type="number" id="retention_time" name="retention_time" step="0.0001">
         
         <label for="adduct_type">Type d'adduit:</label>
         <select id="adduct_type" name="adduct_type">
@@ -84,46 +84,7 @@
     <script src="script.js"></script>
     <script>
         document.getElementById('dataForm').addEventListener('submit', function(e) {
-            let isValid = true;
-            
-            // Validation de la formule chimique
-            const formule = document.getElementById('formule').value;
-            if (!/^([A-Z][a-z]?\d*)+$/.test(formule)) {
-                document.getElementById('formuleError').textContent = "Format de formule chimique invalide";
-                isValid = false;
-            } else {
-                document.getElementById('formuleError').textContent = "";
-            }
-            
-            // Validation de l'InChI
-            const inchi = document.getElementById('inchi').value;
-            if (!inchi.startsWith('InChI=')) {
-                document.getElementById('inchiError').textContent = "L'InChI doit commencer par 'InChI='";
-                isValid = false;
-            } else {
-                document.getElementById('inchiError').textContent = "";
-            }
-    
-            // Validation de l'InChIKey
-            const inchikey = document.getElementById('inchikey').value;
-            if (!/^[A-Z]{14}-[A-Z]{10}-[A-Z]$/.test(inchikey)) {
-                document.getElementById('inchikeyError').textContent = "Format d'InChIKey invalide";
-                isValid = false;
-            } else {
-                document.getElementById('inchikeyError').textContent = "";
-            }
-            // Validation du DOI
-            const doi = document.getElementById('doi').value;
-            if (!/^10\.\d{4,9}\/[-._;()/:A-Z0-9]+$/i.test(doi)) {
-                document.getElementById('doiError').textContent = "Format de DOI invalide";
-                isValid = false;
-            } else {
-                document.getElementById('doiError').textContent = "";
-            }
 
-            if (!isValid) {
-                e.preventDefault(); // Empêche la soumission du formulaire si la validation échoue
-            }
             
         });
         </script>

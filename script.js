@@ -205,13 +205,9 @@ function createNewItem(content, user) {
 
     // Traitement spécial pour MS2
     if (content.ms2) {
-        newItem.metabolite.ms2 = content.ms2.split('\n').map(line => {
-            const [mz, intensity] = line.split(',').map(s => s.trim());
-            return [
-                parseFloat(mz),
-                Math.min(Math.max(parseFloat(intensity), 0), 100)
-            ];
-        }).filter(pair => !isNaN(pair[0]) && !isNaN(pair[1]));
+        newItem.metabolite.ms2 = content.ms2.split(',').map(frag => {
+            return parseFloat(frag.trim());
+        }).filter(val => !isNaN(val));
     }
 
     return newItem;
