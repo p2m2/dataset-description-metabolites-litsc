@@ -35,10 +35,11 @@ async function updateGitHubFile(path, content, message, token) {
             throw new Error('Erreur lors de la récupération du fichier');
         }
 
-        // 3. Ajouter le nouvel élément avec le champ user
+        // 3. Ajouter le nouvel élément avec le champ user et date
         const newItem = {
             ...content,
-            user: owner
+            user: owner,
+            date: new Date().toISOString() // Ajoute la date et l'heure actuelles au format ISO
         };
 
         // 4. Ajouter le nouvel élément au tableau existant ou créer un nouveau tableau
@@ -58,7 +59,7 @@ async function updateGitHubFile(path, content, message, token) {
         }
 
         // 6. Encoder le contenu mis à jour
-        const encodedContent = btoa(JSON.stringify(existingContent));
+        const encodedContent = btoa(JSON.stringify(existingContent, null, 2)); // Ajout de l'indentation pour une meilleure lisibilité
 
         // 7. Créer ou mettre à jour le fichier
         const updateResponse = await fetch(baseApiUrl + path, {
@@ -75,7 +76,11 @@ async function updateGitHubFile(path, content, message, token) {
             })
         });
 
-        if (!updateResponse.ok) throw new Error('Erreur lors de la mise à jour ou création du fichier');
+        if (!updateResponse.ok) {
+            const errorData = await updateResponse.json();
+            console.error('Détails de l\'erreur:', errorData);
+            throw new Error(`Erreur lors de la mise à jour ou création du fichier: ${updateResponse.status} ${updateResponse.statusText}. Message: ${errorData.message}`);
+        }
 
         return await updateResponse.json();
     } catch (error) {
@@ -104,7 +109,12 @@ document.getElementById('dataForm').addEventListener('submit', async function(e)
             token
         );
         resultDiv.textContent = `Données ajoutées avec succès dans le fichier : ${result.content.path}`;
-        this.reset(); // Réinitialiser le formulaire
+        
+        // Réinitialiser tous les champs sauf le token
+        document.getElementById('description').value = '';
+        document.getElementById('target').value = '';
+        // Vous pouvez ajouter d'autres champs ici si nécessaire
+
     } catch (error) {
         resultDiv.textContent = `Erreur: ${error.message}`;
     }
