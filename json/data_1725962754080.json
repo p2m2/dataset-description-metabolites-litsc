@@ -1,1 +1,17 @@
-[{"description":"ddddd","target":"ddddkkkkkkkkkkkkkkkkkk","user":"ofilangi"}]
+[
+  {
+    "description": "ddddd",
+    "target": "ddddkkkkkkkkkkkkkkkkkk",
+    "user": "ofilangi"
+  },
+  {
+    "user": "ofilangi",
+    "date": "2024-09-10T11:21:53.507Z",
+    "metabolite": {
+      "generic_name": "zzzz",
+      "putative_name": "ss",
+      "iupac_name": "zzz"
+    },
+    "description": "ssssssss"
+  }
+]
