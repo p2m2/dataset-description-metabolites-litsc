@@ -1,8 +1,20 @@
-async function updateGitHubFile(owner, repo, path, content, message, token) {
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-
+async function updateGitHubFile(path, content, message, token) {
     try {
-        // 1. Récupérer le contenu actuel et le SHA du fichier
+        // 1. Récupérer les informations de l'utilisateur
+        const userResponse = await fetch('https://api.github.com/user', {
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        if (!userResponse.ok) throw new Error('Erreur lors de la récupération des informations utilisateur');
+        const userData = await userResponse.json();
+        const owner = userData.login;
+
+        const repo = 'dataset-description-metabolites-litsc';
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+        // 2. Récupérer le contenu actuel et le SHA du fichier
         const response = await fetch(apiUrl, {
             headers: {
                 'Authorization': `token ${token}`,
@@ -13,10 +25,16 @@ async function updateGitHubFile(owner, repo, path, content, message, token) {
         const data = await response.json();
         const sha = data.sha;
 
-        // 2. Préparer le nouveau contenu
-        const encodedContent = btoa(JSON.stringify(content));
+        // 3. Ajouter le champ user au contenu
+        const contentWithUser = {
+            ...content,
+            user: owner  // Ajouter le champ user avec le nom d'utilisateur associé au token
+        };
 
-        // 3. Créer le commit avec le contenu mis à jour
+        // 4. Préparer le nouveau contenu
+        const encodedContent = btoa(JSON.stringify(contentWithUser));
+
+        // 5. Créer le commit avec le contenu mis à jour
         const updateResponse = await fetch(apiUrl, {
             method: 'PUT',
             headers: {
@@ -46,8 +64,7 @@ document.getElementById('dataForm').addEventListener('submit', async function(e)
     const token = document.getElementById('token').value;
     const formData = {
         description: document.getElementById('description').value,
-        target: document.getElementById('target').value,
-        user: document.getElementById('user').value
+        target: document.getElementById('target').value
     };
 
     const resultDiv = document.getElementById('result');
@@ -55,9 +72,7 @@ document.getElementById('dataForm').addEventListener('submit', async function(e)
 
     try {
         await updateGitHubFile(
-            'p2m2',                                             // Remplacez par votre nom d'utilisateur GitHub
-            'dataset-description-metabolites-litsc',            // Remplacez par le nom de votre dépôt
-            'json/data.json',                                   // Chemin vers votre fichier JSON
+            'json/data.json',
             formData,
             'Mise à jour des données via le formulaire web',
             token
