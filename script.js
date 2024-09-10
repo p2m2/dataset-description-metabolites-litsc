@@ -1,3 +1,25 @@
+
+function generateTrigramFromLogin(login) {
+    // Supprimer les caractères spéciaux et les espaces
+    login = login.replace(/[^a-zA-Z0-9]/g, '');
+    
+    // Convertir en majuscules
+    login = login.toUpperCase();
+    
+    if (login.length <= 3) {
+        // Si le login a 3 caractères ou moins, on le retourne tel quel
+        return login.padEnd(3, 'X');
+    } else if (login.length === 4) {
+        // Pour un login de 4 caractères, on prend le premier, le troisième et le quatrième
+        return login[0] + login[2] + login[3];
+    } else {
+        // Pour un login de plus de 4 caractères
+        // On prend le premier caractère et les deux derniers
+        return login[0] + login.slice(-2);
+    }
+}
+
+
 async function updateGitHubFile(path, content, message, token) {
     try {
         // 1. Récupérer les informations de l'utilisateur
@@ -52,7 +74,7 @@ async function updateGitHubFile(path, content, message, token) {
         // 5. Vérifier si le tableau dépasse 5 éléments
         if (existingContent.length > 5) {
             // Créer un nouveau fichier
-            const newFileName = `data_${Date.now()}.json`;
+            const newFileName = `data_${Date.now()}_${generateTrigramFromLogin(owner)}.json`;
             path = `json/${newFileName}`;
             existingContent = [newItem]; // Commencer un nouveau fichier avec seulement le nouvel élément
             sha = ''; // Pas de SHA pour un nouveau fichier
