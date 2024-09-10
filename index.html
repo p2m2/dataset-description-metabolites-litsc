@@ -6,7 +6,7 @@
     <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
         label { display: block; margin-top: 10px; }
-        input, textarea { width: 100%; padding: 5px; margin-top: 5px; }
+        input, textarea, select { width: 100%; padding: 5px; margin-top: 5px; }
         button { margin-top: 20px; padding: 10px; }
     </style>
 </head>
@@ -14,25 +14,64 @@
     <h1>Mise à jour du fichier JSON</h1>
     <form id="dataForm">
         <label for="token">Token GitHub:</label>
-        <input type="password" id="token" name="token" required>
+        <input type="password" id="token" name="token">
         
-        <label for="description">Description:</label>
+        <label for="description">Text description:</label>
         <textarea id="description" name="description" required></textarea>
         
-        <label for="name">Nom:</label>
-        <input type="text" id="name" name="name" required>
+        <label for="doi">doi :</label>
+        <input type="text" id="doi" name="doi">
+        <span id="doiError" class="error"></span>
+        <hr>
+
+        <label for="name">Metabolite</label>
         
-        <label for="synonymes">Synonymes:</label>
-        <textarea id="synonymes" name="synonymes"></textarea>
+        <label for="generic_name">Nom générique :</label>
+        <input type="text" id="generic_name" name="generic_name">
         
-        <label for="inchikey">InChIKey:</label>
-        <input type="text" id="inchikey" name="inchikey">
+        <label for="putative_name">Nom putatif:</label>
+        <input type="text" id="putative_name" name="putative_name">
         
-        <label for="inchi">InChI:</label>
-        <textarea id="inchi" name="inchi"></textarea>
+        <label for="iupac_name">Nom IUPAC:</label>
+        <input type="text" id="iupac_name" name="iupac_name">
+        
+        <label for="monoisotopic_mass">Masse monoisotopique:</label>
+        <input type="number" id="monoisotopic_mass" name="monoisotopic_mass" step="0.0000001">
+        
+        <label for="smiles">SMILES:</label>
+        <input type="text" id="smiles" name="smiles">
+        
+        <label for="mz">m/z:</label>
+        <input type="number" id="mz" name="mz" step="0.0001">
+        
+        <label for="retention_time">Temps de rétention:</label>
+        <input type="number" id="retention_time" name="retention_time" step="0.01">
+        
+        <label for="adduct_type">Type d'adduit:</label>
+        <select id="adduct_type" name="adduct_type">
+            <option value="">Sélectionner un adduit</option>
+            <option value="[M-H]-">[M-H]-</option>
+            <option value="[M+H]+">[M+H]+</option>
+            <option value="[M+Na]+">[M+Na]+</option>
+            <option value="[M+K]+">[M+K]+</option>
+            <option value="[M+NH4]+">[M+NH4]+</option>
+            <option value="[M+Cl]-">[M+Cl]-</option>
+            <option value="[M+CH3OH+H]+">[M+CH3OH+H]+</option>
+            <option value="[M+AcOH-H]-">[M+AcOH-H]-</option>
+            <!-- Ajoutez d'autres adduits si nécessaire -->
+        </select>
         
         <label for="formule">Formule:</label>
         <input type="text" id="formule" name="formule">
+        <span id="formuleError" class="error"></span>
+        
+        <label for="inchi">InChI:</label>
+        <textarea id="inchi" name="inchi"></textarea>
+        <span id="inchiError" class="error"></span>
+        
+        <label for="inchikey">InChIKey:</label>
+        <input type="text" id="inchikey" name="inchikey">
+        <span id="inchikeyError" class="error"></span>
         
         <label for="ms2">MS2:</label>
         <textarea id="ms2" name="ms2"></textarea>
@@ -40,8 +79,53 @@
         <button type="submit">Mettre à jour le fichier JSON</button>
     </form>
     <div id="result"></div>
+    <div id="filesInfo"></div>
 
     <script src="script.js"></script>
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            // Validation de la formule chimique
+            const formule = document.getElementById('formule').value;
+            if (!/^([A-Z][a-z]?\d*)+$/.test(formule)) {
+                document.getElementById('formuleError').textContent = "Format de formule chimique invalide";
+                isValid = false;
+            } else {
+                document.getElementById('formuleError').textContent = "";
+            }
+            
+            // Validation de l'InChI
+            const inchi = document.getElementById('inchi').value;
+            if (!inchi.startsWith('InChI=')) {
+                document.getElementById('inchiError').textContent = "L'InChI doit commencer par 'InChI='";
+                isValid = false;
+            } else {
+                document.getElementById('inchiError').textContent = "";
+            }
+    
+            // Validation de l'InChIKey
+            const inchikey = document.getElementById('inchikey').value;
+            if (!/^[A-Z]{14}-[A-Z]{10}-[A-Z]$/.test(inchikey)) {
+                document.getElementById('inchikeyError').textContent = "Format d'InChIKey invalide";
+                isValid = false;
+            } else {
+                document.getElementById('inchikeyError').textContent = "";
+            }
+            // Validation du DOI
+            const doi = document.getElementById('doi').value;
+            if (!/^10\.\d{4,9}\/[-._;()/:A-Z0-9]+$/i.test(doi)) {
+                document.getElementById('doiError').textContent = "Format de DOI invalide";
+                isValid = false;
+            } else {
+                document.getElementById('doiError').textContent = "";
+            }
+
+            if (!isValid) {
+                e.preventDefault(); // Empêche la soumission du formulaire si la validation échoue
+            }
+            
+        });
+        </script>
 </body>
 </html>
-
