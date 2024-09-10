@@ -42,6 +42,10 @@ async function getLatestDataFile(baseApiUrl, token, owner, isLocal) {
         });
 
         if (!response.ok) {
+            if (response.status === 404) {
+                //pas de fichier trouvé
+                return `data_${Date.now()}_${generateTrigramFromLogin(owner)}.json`;
+            } else
             throw new Error('Erreur lors de la récupération de la liste des fichiers');
         }
 
