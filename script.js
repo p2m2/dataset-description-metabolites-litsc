@@ -24,6 +24,8 @@ async function updateGitHubFile(path, content, message, token) {
         if (!response.ok) throw new Error('Erreur lors de la récupération du fichier');
         const data = await response.json();
         const sha = data.sha;
+        console.log("--------------------");
+        console.log(owner);
 
         // 3. Ajouter le champ user au contenu
         const contentWithUser = {
