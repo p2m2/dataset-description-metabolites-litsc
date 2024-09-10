@@ -3,7 +3,7 @@
     "user": "ofilangi",
     "date": "2024-09-10T12:24:59.087Z",
     "metabolite": {
-      "generic_name": "ÃÂ²-glucogallin",
+      "generic_name": "ÃÂÃÂ²-glucogallin",
       "mz": 331.0702,
       "retention_time": 5.655,
       "ms2": [
@@ -14,7 +14,7 @@
         169.0137
       ]
     },
-    "description": "D1\t5.655\t260\t331.0702\t123.0083, 124.0161, 125.0239, 153.0195, 169.0137\tÃÂ²-glucogallin*",
+    "description": "D1\t5.655\t260\t331.0702\t123.0083, 124.0161, 125.0239, 153.0195, 169.0137\tÃÂÃÂ²-glucogallin*",
     "doi": "https://doi.org/10.1016/j.foodchem.2021.130803"
   },
   {
@@ -56,5 +56,19 @@
     },
     "description": "D4\t8.198\t210\t169.0319\t125.0240\tGallic acid*",
     "doi": "https://doi.org/10.1016/j.foodchem.2021.130803"
+  },
+  {
+    "user": "ofilangi",
+    "date": "2024-09-10T12:31:58.928Z",
+    "metabolite": {
+      "generic_name": "Theogallin",
+      "mz": 343.0702,
+      "retention_time": 9.134,
+      "ms2": [
+        125.0238,
+        191.0558
+      ]
+    },
+    "description": "D5\t9.134\t220\t343.0702\t125.0238, 191.0558\tTheogallin*"
   }
 ]
