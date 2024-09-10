@@ -1,26 +1,11 @@
 [
   {
     "user": "ofilangi",
-    "date": "2024-09-10T11:46:43.250Z",
-    "metabolite": {
-      "generic_name": "ssssssssssss",
-      "putative_name": "ssssssssss",
-      "iupac_name": "sssssssss",
-      "monoisotopic_mass": 45.32,
-      "mz": 45.2,
-      "retention_time": 22.3,
-      "adduct_type": "[M+H]+"
-    },
-    "description": "aaaaaaaaa",
-    "doi": "https://doi.org/10.1016/j.phytochem.2020.112571"
-  },
-  {
-    "user": "ofilangi",
     "date": "2024-09-10T12:24:59.087Z",
     "metabolite": {
       "generic_name": "Î²-glucogallin",
       "mz": 331.0702,
-      "retention_time": 5.65,
+      "retention_time": 5.655,
       "ms2": [
         123.0083,
         124.0161,
