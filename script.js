@@ -12,7 +12,7 @@ async function updateGitHubFile(path, content, message, token) {
         const owner = userData.login;
 
         const repo = 'dataset-description-metabolites-litsc';
-        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+        const apiUrl = `https://api.github.com/repos/p2m2/${repo}/contents/${path}`;
 
         // 2. Récupérer le contenu actuel et le SHA du fichier
         const response = await fetch(apiUrl, {
