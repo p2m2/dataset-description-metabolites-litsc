@@ -205,6 +205,7 @@ function createNewItem(content, user) {
 
     // Traitement spécial pour MS2
     if (content.ms2) {
+        console.log(content.ms2);
         newItem.metabolite.ms2 = content.ms2.split(',').map(frag => {
             return parseFloat(frag.trim());
         }).filter(val => !isNaN(val));
