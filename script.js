@@ -99,6 +99,10 @@ async function updateLocalFile(content, message) {
     }
 }
 
+function utf8_to_b64(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+}
+
 async function updateGitHubFile(content, message, token) {
     const userResponse = await fetch('https://api.github.com/user', {
         headers: {
@@ -147,7 +151,7 @@ async function updateGitHubFile(content, message, token) {
         sha = '';
     }
 
-    const encodedContent = btoa(JSON.stringify(existingContent, null, 2));
+    const encodedContent = utf8_to_b64(JSON.stringify(existingContent, null, 2));
 
     const updateResponse = await fetch(baseApiUrl + path, {
         method: 'PUT',
