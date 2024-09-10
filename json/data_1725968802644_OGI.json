@@ -13,5 +13,23 @@
     },
     "description": "aaaaaaaaa",
     "doi": "https://doi.org/10.1016/j.phytochem.2020.112571"
+  },
+  {
+    "user": "ofilangi",
+    "date": "2024-09-10T12:24:59.087Z",
+    "metabolite": {
+      "generic_name": "β-glucogallin",
+      "mz": 331.0702,
+      "retention_time": 5.65,
+      "ms2": [
+        123.0083,
+        124.0161,
+        125.0239,
+        153.0195,
+        169.0137
+      ]
+    },
+    "description": "D1\t5.655\t260\t331.0702\t123.0083, 124.0161, 125.0239, 153.0195, 169.0137\tβ-glucogallin*",
+    "doi": "https://doi.org/10.1016/j.foodchem.2021.130803"
   }
 ]
