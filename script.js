@@ -45,7 +45,44 @@ async function getLatestDataFile(baseApiUrl, token, owner) {
 
 async function updateGitHubFile(content, message, token) {
     try {
-        // Les étapes 1 à 3 restent inchangées
+        // 1. Récupérer les informations de l'utilisateur
+        const userResponse = await fetch('https://api.github.com/user', {
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        if (!userResponse.ok) throw new Error('Erreur lors de la récupération des informations utilisateur');
+        const userData = await userResponse.json();
+        const owner = userData.login;
+
+        const repo = 'dataset-description-metabolites-litsc';
+        const baseApiUrl = `https://api.github.com/repos/p2m2/${repo}/contents/`;
+
+        // 2. Récupérer le nom du dernier fichier de données
+        const latestFileName = await getLatestDataFile(baseApiUrl, token, owner);
+        let path = `json/${latestFileName}`;
+
+        // 3. Récupérer le contenu actuel et le SHA du fichier
+        const response = await fetch(baseApiUrl + path, {
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        let existingContent = [];
+        let sha = '';
+
+        if (response.ok) {
+            const data = await response.json();
+            sha = data.sha;
+            existingContent = JSON.parse(atob(data.content));
+        } else if (response.status === 404) {
+            console.log('Le fichier n\'existe pas encore, création d\'un nouveau fichier.');
+        } else {
+            throw new Error('Erreur lors de la récupération du fichier');
+        }
 
         // 4. Ajouter le nouvel élément avec le champ user, date et metabolite
         const newItem = {
