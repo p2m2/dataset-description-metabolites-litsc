@@ -1,3 +1,5 @@
+const size_element_size_by_file = 25;
+
 function generateTrigramFromLogin(login) {
     // Supprimer les caractères spéciaux et les espaces
     login = login.replace(/[^a-zA-Z0-9]/g, '');
@@ -83,7 +85,7 @@ async function updateLocalFile(content, message) {
 
     existingContent.push(newItem);
 
-    if (existingContent.length > 5) {
+    if (existingContent.length > size_element_size_by_file) {
         const newFileName = `data_${Date.now()}_XXX.json`;
         existingContent = [newItem];
         localStorage.setItem(newFileName, JSON.stringify(existingContent));
