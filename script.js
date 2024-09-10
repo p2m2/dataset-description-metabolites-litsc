@@ -193,7 +193,7 @@ function createNewItem(content, user) {
     const metaboliteFields = [
         'generic_name', 'putative_name', 'iupac_name',
         'monoisotopic_mass', 'smiles', 'mz', 'retention_time',
-        'adduct_type', 'inchikey', 'inchi', 'formule'
+        'adduct_type', 'inchikey', 'inchi', 'formule','ms2'
     ];
 
     // Ajout des champs du métabolite s'ils existent
@@ -202,14 +202,6 @@ function createNewItem(content, user) {
             newItem.metabolite[field] = content[field];
         }
     });
-
-    // Traitement spécial pour MS2
-    if (content.ms2) {
-        console.log(content.ms2);
-        newItem.metabolite.ms2 = content.ms2.split(',').map(frag => {
-            return parseFloat(frag.trim());
-        }).filter(val => !isNaN(val));
-    }
 
     return newItem;
 }
@@ -293,12 +285,10 @@ document.getElementById('dataForm').addEventListener('submit', async function(e)
     
     // Traitement spécial pour MS2 (si vous voulez le convertir en tableau)
     if ('ms2' in formData) {
-        formData.ms2 = formData.ms2.split('\n').map(line => {
-            const [mz, intensity] = line.split(',').map(s => s.trim());
-            return [parseFloat(mz), parseFloat(intensity)];
-        }).filter(pair => !isNaN(pair[0]) && !isNaN(pair[1]));
+        formData.ms2 = formData.ms2.split(',').map(frag => {
+            return parseFloat(frag.trim());
+        }).filter(val => !isNaN(val));
     }
-
     
     resultDiv.textContent = 'Mise à jour en cours...';
     
