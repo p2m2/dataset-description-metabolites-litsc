@@ -219,7 +219,7 @@ function isFormisValid() {
     // Validation de la formule chimique
     const formule = document.getElementById('formule').value;
     
-    if (formule != '' && !/^([A-Z][a-z]?\d*)+$/.test(formule)) {
+    if (formule !== '' && !/^([A-Z][a-z]?\d*)+$/.test(formule)) {
         document.getElementById('formuleError').textContent = "Format de formule chimique invalide";
         isValid = false;
     } else {
@@ -228,7 +228,7 @@ function isFormisValid() {
     
     // Validation de l'InChI
     const inchi = document.getElementById('inchi').value;
-    if (inchi != '' && !inchi.startsWith('InChI=')) {
+    if (inchi !== '' && !inchi.startsWith('InChI=')) {
         document.getElementById('inchiError').textContent = "L'InChI doit commencer par 'InChI='";
         isValid = false;
     } else {
@@ -237,20 +237,22 @@ function isFormisValid() {
 
     // Validation de l'InChIKey
     const inchikey = document.getElementById('inchikey').value;
-    if (inchikey != '' && !/^[A-Z]{14}-[A-Z]{10}-[A-Z]$/.test(inchikey)) {
+    if (inchikey !== '' && !/^[A-Z]{14}-[A-Z]{10}-[A-Z]$/.test(inchikey)) {
         document.getElementById('inchikeyError').textContent = "Format d'InChIKey invalide";
         isValid = false;
     } else {
         document.getElementById('inchikeyError').textContent = "";
     }
+    const doiRegex = /^(https?:\/\/(dx\.)?doi\.org\/|doi:)?10\.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
     // Validation du DOI
     const doi = document.getElementById('doi').value;
-    if (doi != '' &&!/^10\.\d{4,9}\/[-._;()/:A-Z0-9]+$/i.test(doi)) {
+    if (doi !== '' && !doiRegex.test(doi)) {
         document.getElementById('doiError').textContent = "Format de DOI invalide";
         isValid = false;
     } else {
         document.getElementById('doiError').textContent = "";
     }
+    
     return isValid;
 }
 
