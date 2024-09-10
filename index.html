@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mise à jour du fichier JSON GitHub</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 5px; margin-top: 5px; }
+        button { margin-top: 20px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Mise à jour du fichier JSON sur GitHub</h1>
+    <form id="dataForm">
+        <label for="token">Token GitHub:</label>
+        <input type="password" id="token" name="token" required>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea>
+        
+        <label for="target">Cible:</label>
+        <input type="text" id="target" name="target" required>
+        
+        <label for="user">Utilisateur GitHub:</label>
+        <input type="text" id="user" name="user" required>
+        
+        <button type="submit">Mettre à jour le fichier JSON</button>
+    </form>
+    <div id="result"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
