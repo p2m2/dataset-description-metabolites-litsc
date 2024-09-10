@@ -12,32 +12,56 @@ async function updateGitHubFile(path, content, message, token) {
         const owner = userData.login;
 
         const repo = 'dataset-description-metabolites-litsc';
-        const apiUrl = `https://api.github.com/repos/p2m2/${repo}/contents/${path}`;
+        const baseApiUrl = `https://api.github.com/repos/p2m2/${repo}/contents/`;
 
         // 2. Récupérer le contenu actuel et le SHA du fichier
-        const response = await fetch(apiUrl, {
+        const response = await fetch(baseApiUrl + path, {
             headers: {
                 'Authorization': `token ${token}`,
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
-        if (!response.ok) throw new Error('Erreur lors de la récupération du fichier');
-        const data = await response.json();
-        const sha = data.sha;
-        console.log("--------------------");
-        console.log(owner);
 
-        // 3. Ajouter le champ user au contenu
-        const contentWithUser = {
+        let existingContent = [];
+        let sha = '';
+
+        if (response.ok) {
+            const data = await response.json();
+            sha = data.sha;
+            existingContent = JSON.parse(atob(data.content));
+        } else if (response.status === 404) {
+            console.log('Le fichier n\'existe pas encore, création d\'un nouveau fichier.');
+        } else {
+            throw new Error('Erreur lors de la récupération du fichier');
+        }
+
+        // 3. Ajouter le nouvel élément avec le champ user
+        const newItem = {
             ...content,
-            user: owner  // Ajouter le champ user avec le nom d'utilisateur associé au token
+            user: owner
         };
 
-        // 4. Préparer le nouveau contenu
-        const encodedContent = btoa(JSON.stringify(contentWithUser));
+        // 4. Ajouter le nouvel élément au tableau existant ou créer un nouveau tableau
+        if (Array.isArray(existingContent)) {
+            existingContent.push(newItem);
+        } else {
+            existingContent = [newItem];
+        }
 
-        // 5. Créer le commit avec le contenu mis à jour
-        const updateResponse = await fetch(apiUrl, {
+        // 5. Vérifier si le tableau dépasse 5 éléments
+        if (existingContent.length > 5) {
+            // Créer un nouveau fichier
+            const newFileName = `data_${Date.now()}.json`;
+            path = `json/${newFileName}`;
+            existingContent = [newItem]; // Commencer un nouveau fichier avec seulement le nouvel élément
+            sha = ''; // Pas de SHA pour un nouveau fichier
+        }
+
+        // 6. Encoder le contenu mis à jour
+        const encodedContent = btoa(JSON.stringify(existingContent));
+
+        // 7. Créer ou mettre à jour le fichier
+        const updateResponse = await fetch(baseApiUrl + path, {
             method: 'PUT',
             headers: {
                 'Authorization': `token ${token}`,
@@ -47,11 +71,11 @@ async function updateGitHubFile(path, content, message, token) {
             body: JSON.stringify({
                 message: message,
                 content: encodedContent,
-                sha: sha
+                sha: sha // Si c'est un nouveau fichier, le SHA sera une chaîne vide
             })
         });
 
-        if (!updateResponse.ok) throw new Error('Erreur lors de la mise à jour du fichier');
+        if (!updateResponse.ok) throw new Error('Erreur lors de la mise à jour ou création du fichier');
 
         return await updateResponse.json();
     } catch (error) {
@@ -73,13 +97,13 @@ document.getElementById('dataForm').addEventListener('submit', async function(e)
     resultDiv.textContent = 'Mise à jour en cours...';
 
     try {
-        await updateGitHubFile(
+        const result = await updateGitHubFile(
             'json/data.json',
             formData,
-            'Mise à jour des données via le formulaire web',
+            'Ajout de nouvelles données via le formulaire web',
             token
         );
-        resultDiv.textContent = 'Données mises à jour avec succès !';
+        resultDiv.textContent = `Données ajoutées avec succès dans le fichier : ${result.content.path}`;
         this.reset(); // Réinitialiser le formulaire
     } catch (error) {
         resultDiv.textContent = `Erreur: ${error.message}`;
